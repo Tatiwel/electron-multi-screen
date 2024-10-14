@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <title>Electron MultiScreen</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        margin: 0;
+        background-color: #f4f4f9;
+      }
+
+      .container {
+        text-align: center;
+        background-color: white;
+        padding: 20px;
+        border-radius: 8px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      }
+
+      h1 {
+        font-size: 2em;
+        margin-bottom: 10px;
+      }
+
+      input {
+        padding: 10px;
+        font-size: 1em;
+        border-radius: 4px;
+        border: 1px solid #ccc;
+        width: 80%;
+        margin-bottom: 20px;
+      }
+
+      button {
+        padding: 10px 20px;
+        font-size: 1em;
+        border: none;
+        border-radius: 4px;
+        background-color: #4caf50;
+        color: white;
+        cursor: pointer;
+      }
+
+      button:hover {
+        background-color: #45a049;
+      }
+
+      .error-modal {
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        background-color: white;
+        padding: 20px;
+        border-radius: 8px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        display: none;
+        z-index: 1000;
+        text-align: center;
+      }
+
+      .error-modal h2 {
+        color: red;
+        margin: 0;
+        margin-bottom: 10px;
+      }
+
+      .error-modal p {
+        margin-bottom: 20px;
+      }
+
+      .error-modal button {
+        padding: 10px 20px;
+        font-size: 1em;
+        border: none;
+        border-radius: 4px;
+        background-color: #4caf50;
+        color: white;
+        cursor: pointer;
+      }
+
+      .error-modal button:hover {
+        background-color: #45a049;
+      }
+
+      .overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.5);
+        display: none;
+        z-index: 999;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <h1>Welcome!</h1>
+      <p>Please enter your name:</p>
+      <input type="text" id="user-name" placeholder="Your name" />
+      <br />
+      <button id="submit-name">Ok</button>
+    </div>
+
+    <!-- Modal de erro personalizado -->
+    <div class="overlay" id="error-overlay"></div>
+    <div class="error-modal" id="error-modal">
+      <h2>Error</h2>
+      <p>Please enter your name!</p>
+      <button id="close-error">Close</button>
+    </div>
+
+    <script>
+      const { ipcRenderer } = require('electron');
+
+      document.getElementById('submit-name').addEventListener('click', () => {
+        const userName = document.getElementById('user-name').value;
+        if (userName) {
+          ipcRenderer.send('open-new-window', userName);
+        } else {
+          showErrorModal();
+        }
+      });
+
+      document.getElementById('close-error').addEventListener('click', () => {
+        hideErrorModal();
+      });
+
+      function showErrorModal() {
+        document.getElementById('error-overlay').style.display = 'block';
+        document.getElementById('error-modal').style.display = 'block';
+      }
+
+      function hideErrorModal() {
+        document.getElementById('error-overlay').style.display = 'none';
+        document.getElementById('error-modal').style.display = 'none';
+      }
+    </script>
+  </body>
+</html>
